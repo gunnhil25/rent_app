@@ -41,7 +41,7 @@ If you are running Docker inside a Proxmox LXC container (e.g. Debian or Ubuntu 
    ```
 3. **Deploy the App:**
    ```bash
-   git clone <your-repo> /opt/rent-app
+   git clone https://github.com/gunnhil25/rent_app /opt/rent-app
    cd /opt/rent-app
    docker compose up -d
    ```
