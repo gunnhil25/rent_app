@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: rent_app_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rentapp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rentapp_secure_password}
+      POSTGRES_DB: ${POSTGRES_DB:-household_tracker}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rentapp} -d ${POSTGRES_DB:-household_tracker}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rentapp_net
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rent_app_web
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-rentapp}:${POSTGRES_PASSWORD:-rentapp_secure_password}@db:5432/${POSTGRES_DB:-household_tracker}
+      - DEBUG=${DEBUG:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - rentapp_net
+
+volumes:
+  postgres_data:
+    name: rent_app_postgres_data
+
+networks:
+  rentapp_net:
+    name: rent_app_network
