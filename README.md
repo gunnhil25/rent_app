@@ -1,4 +1,4 @@
-# 🏠 Household Finance Tracker WebApp
+# 🏠 Household Finance Tracker WebApp!
 
 A modern household rent and shared expense tracking web application with a **FastAPI (Python 3.12)** backend and **PostgreSQL 16** database, fully containerized with **Docker** for deployment on Proxmox LXC, homeservers, or local environments.
 
